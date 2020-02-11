@@ -11,6 +11,8 @@ let hasFallenDownHole = false;
 class Field {
     constructor(field) {
         this.field = field;
+        this.fieldWidth = this.field[0].length
+        this.fieldHeight = this.field.length
         this.pathCurrentPos = [0, 0];
     }
 
@@ -23,23 +25,29 @@ class Field {
         })
     }
 
-    isInField() {
-
-    }
-
     move(direction) {
+        let posX = this.pathCurrentPos[1];
+        let posY = this.pathCurrentPos[0];
         switch (direction) {
             case 'l':
-                this.pathCurrentPos[1] -= 1;
+                if (posX - 1 > 0) {
+                    this.pathCurrentPos[1] -= 1;
+                }
                 break;
             case 'r':
-                this.pathCurrentPos[1] += 1;
+                if (posX + 1 < this.fieldWidth) {
+                    this.pathCurrentPos[1] += 1;
+                }
                 break;
             case 'u':
-                this.pathCurrentPos[0] -= 1;
+                if (posY - 1 > 0) {
+                    this.pathCurrentPos[0] -= 1;
+                }
                 break;
             case 'd':
-                this.pathCurrentPos[0] += 1;
+                if (posY + 1 < this.fieldHeight) {
+                    this.pathCurrentPos[0] += 1;
+                }
                 break;
         }
         this.field[this.pathCurrentPos[0]][this.pathCurrentPos[1]] = '*';
