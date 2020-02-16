@@ -30,7 +30,7 @@ class Field {
         let posY = this.pathCurrentPos[0];
         switch (direction) {
             case 'l':
-                if (posX - 1 > 0) {
+                if (posX - 1 >= 0) {
                     this.pathCurrentPos[1] -= 1;
                 }
                 break;
