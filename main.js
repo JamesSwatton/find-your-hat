@@ -5,7 +5,6 @@ const hole = 'O';
 const fieldCharacter = '░';
 const pathCharacter = '*';
 
-let hasFoundHat = false;
 
 class Field {
     constructor(field) {
@@ -14,6 +13,7 @@ class Field {
         this.fieldHeight = this.field.length
         this.pathCurrentPos = [0, 0];
         this.hasFallenInHole = false;
+        this.hasFoundHat = false;
     }
 
     print() {
@@ -32,40 +32,40 @@ class Field {
             case 'l':
                 if (posX - 1 >= 0) {
                     this.pathCurrentPos[1] -= 1;
-                    this.checkForHole(this.pathCurrentPos);
+                    this.checkForHoleOrHat(this.pathCurrentPos);
                 }
                 break;
             case 'r':
                 if (posX + 1 < this.fieldWidth) {
                     this.pathCurrentPos[1] += 1;
-                    this.checkForHole(this.pathCurrentPos);
+                    this.checkForHoleOrHat(this.pathCurrentPos);
                 }
                 break;
             case 'u':
                 if (posY - 1 > 0) {
                     this.pathCurrentPos[0] -= 1;
-                    this.checkForHole(this.pathCurrentPos);
+                    this.checkForHoleOrHat(this.pathCurrentPos);
                 }
                 break;
             case 'd':
                 if (posY + 1 < this.fieldHeight) {
                     this.pathCurrentPos[0] += 1;
-                    this.checkForHole(this.pathCurrentPos);
+                    this.checkForHoleOrHat(this.pathCurrentPos);
                 }
                 break;
         }
         this.field[this.pathCurrentPos[0]][this.pathCurrentPos[1]] = '*';
     }
 
-    checkForHole(location) {
+    checkForHoleOrHat(location) {
         const x = location[1];
         const y = location[0];
         if (this.field[y][x] === 'O') {
             this.hasFallenInHole = true;
-        }
-        console.log('hello');
+        } else if (this.field[y][x] === '^') {
+            this.hasFoundHat = true;
+        } 
     }
-
 }
 
 const myField = new Field([
@@ -82,7 +82,7 @@ function isValidDirection(direction) {
 
 myField.print();
 
-while (!myField.hasFallenInHole) {
+while (!myField.hasFoundHat && !myField.hasFallenInHole) {
     const direction = prompt('Which way?');
     if (isValidDirection(direction)) {
         myField.move(direction);
@@ -90,4 +90,8 @@ while (!myField.hasFallenInHole) {
     }
 };
 
-console.log('You fell in a hole!');
+if (myField.hasFallenInHole) {
+    console.log('You fell in a hole!');
+} else {
+    console.log('You found your hat!');
+}
