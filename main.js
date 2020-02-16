@@ -6,7 +6,6 @@ const fieldCharacter = '░';
 const pathCharacter = '*';
 
 let hasFoundHat = false;
-let hasFallenDownHole = false;
 
 class Field {
     constructor(field) {
@@ -14,6 +13,7 @@ class Field {
         this.fieldWidth = this.field[0].length
         this.fieldHeight = this.field.length
         this.pathCurrentPos = [0, 0];
+        this.hasFallenInHole = false;
     }
 
     print() {
@@ -32,25 +32,38 @@ class Field {
             case 'l':
                 if (posX - 1 >= 0) {
                     this.pathCurrentPos[1] -= 1;
+                    this.checkForHole(this.pathCurrentPos);
                 }
                 break;
             case 'r':
                 if (posX + 1 < this.fieldWidth) {
                     this.pathCurrentPos[1] += 1;
+                    this.checkForHole(this.pathCurrentPos);
                 }
                 break;
             case 'u':
                 if (posY - 1 > 0) {
                     this.pathCurrentPos[0] -= 1;
+                    this.checkForHole(this.pathCurrentPos);
                 }
                 break;
             case 'd':
                 if (posY + 1 < this.fieldHeight) {
                     this.pathCurrentPos[0] += 1;
+                    this.checkForHole(this.pathCurrentPos);
                 }
                 break;
         }
         this.field[this.pathCurrentPos[0]][this.pathCurrentPos[1]] = '*';
+    }
+
+    checkForHole(location) {
+        const x = location[1];
+        const y = location[0];
+        if (this.field[y][x] === 'O') {
+            this.hasFallenInHole = true;
+        }
+        console.log('hello');
     }
 
 }
@@ -61,20 +74,20 @@ const myField = new Field([
   ['░', '^', '░'],
 ]);
 
-myField.print();
 
 function isValidDirection(direction) {
     const validDirections = ['l', 'r', 'u', 'd'];
     return validDirections.includes(direction);
 }
 
-do {
-    // game stuff in here
+myField.print();
+
+while (!myField.hasFallenInHole) {
     const direction = prompt('Which way?');
-    // console.log(direction);
     if (isValidDirection(direction)) {
         myField.move(direction);
         myField.print();
     }
-} while (!hasFoundHat || !hasFallenDownHole) {
- }
+};
+
+console.log('You fell in a hole!');
